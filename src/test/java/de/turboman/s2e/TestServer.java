@@ -1,4 +1,4 @@
-package de.turboman.s2e.TestServer;
+package de.turboman.s2e;
 
 import de.turboman.s2e.Schem2Entity;
 import net.minestom.server.MinecraftServer;
