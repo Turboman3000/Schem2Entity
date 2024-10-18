@@ -23,6 +23,16 @@ dependencies {
     implementation("dev.dewy:nbt:1.5.1")
 }
 
+tasks {
+    shadowJar {
+        archiveClassifier.set("")
+    }
+
+    artifacts {
+        add("archives", shadowJar.get())
+    }
+}
+
 tasks.test {
     useJUnitPlatform()
 }
