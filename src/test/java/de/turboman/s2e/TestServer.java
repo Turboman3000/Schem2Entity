@@ -19,12 +19,13 @@ public class TestServer {
     public static void main(String[] args) {
         MinecraftServer server = MinecraftServer.init();
         GlobalEventHandler eventHandler = MinecraftServer.getGlobalEventHandler();
-        CommandManager commandManager = MinecraftServer.getCommandManager();
 
         instance = MinecraftServer.getInstanceManager().createInstanceContainer();
 
         instance.setChunkSupplier(LightingChunk::new);
         instance.setGenerator(unit -> unit.modifier().fillHeight(0, 40, Block.GRASS_BLOCK));
+
+        Schem2Entity.spawn(new File("./test.schem"), instance, new Pos(0, 50, 0));
 
         eventHandler.addListener(AsyncPlayerConfigurationEvent.class, e -> {
             e.setSpawningInstance(instance);
@@ -35,19 +36,6 @@ public class TestServer {
             e.getPlayer().setAllowFlying(true);
         });
 
-        commandManager.register(new SpawnCommand());
-
         server.start("0.0.0.0", 25565);
-    }
-
-    static class SpawnCommand extends Command {
-
-        public SpawnCommand() {
-            super("spawn");
-
-            setDefaultExecutor((sender, args) -> {
-                Schem2Entity.spawn(new File("./test.schem"), instance, new Pos(0, 50, 0));
-            });
-        }
     }
 }
