@@ -9,6 +9,7 @@ import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.metadata.display.BlockDisplayMeta;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.instance.block.Block;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +19,15 @@ import java.util.HashMap;
 public class Schem2Entity {
     private static final Nbt NBT = new Nbt();
 
-    public static ArrayList<Entity> spawn(File schematicFile, InstanceContainer instance, Point location) {
+    /**
+     * It's reading a Schematic file (.schem) and converts/spawns Block Display Entities in the Provided Instance and Provided Location
+     *
+     * @param schematicFile The schematic file
+     * @param instance      The Instance to Spawn the Entities in
+     * @param location      The Location the Entities should spawn
+     * @return An Array of the Entities
+     */
+    public static @NotNull ArrayList<Entity> spawn(File schematicFile, InstanceContainer instance, Point location) {
         final ArrayList<Entity> entities = new ArrayList<>();
         CompoundTag data;
 

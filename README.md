@@ -4,7 +4,19 @@ Schem2Entity is a library for the [Minestom](https://github.com/Minestom/Minesto
 
 ## Installation
 
-You can add this library to your project either by manually including it as a dependency or by adding it to your build tool (e.g., `gradle`, `maven`).
+The Library is published via jitpack
+
+```groovy
+repositories {
+    // ...
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    // Schem2Entity
+    implementation 'com.github.Turboman3000:Schem2Entity:$LATEST_COMMIT_HASH'
+}
+```
 
 ##   Example
 
@@ -26,7 +38,11 @@ public class Main {
         Point spawnLocation = /* Position in the worldContainer */;
 
         // Convert the schematic into Block Display Entities and spawn them
-        // Returns an ArrayList with the Entites
+        // @return = Returns an ArrayList with the Entites
         Schem2Entity.spawn(schemFile, worldContainer, spawnLocation);
     }
 }
+```
+
+## License
+This project is licensed under the [MIT License](./LICENSE).
