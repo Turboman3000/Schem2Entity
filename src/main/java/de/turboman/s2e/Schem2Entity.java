@@ -8,11 +8,12 @@ import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.metadata.display.BlockDisplayMeta;
 import net.minestom.server.instance.InstanceContainer;
-import net.minestom.server.item.Material;
+import net.minestom.server.instance.block.Block;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Schem2Entity {
     private static final Nbt NBT = new Nbt();
@@ -27,7 +28,6 @@ public class Schem2Entity {
             throw new RuntimeException(e);
         }
 
-        final var offset = data.getIntArray("Offset");
         final var palette = data.getCompound("Blocks").getCompound("Palette");
         final var dataArray = data.getCompound("Blocks").getByteArray("Data");
 
@@ -38,23 +38,31 @@ public class Schem2Entity {
         for (short w = 0; w < width; w++) {
             for (short h = 0; h < height; h++) {
                 for (short l = 0; l < length; l++) {
-                    final var paletteKey = (String) palette.keySet().toArray()[dataArray.get(w + l * width + h * width * length)];
-                    final var material = Material.fromNamespaceId(paletteKey);
+                    String paletteKey = (String) palette.keySet().toArray()[dataArray.get(w + l * width + h * width * length)];
+                    final var paletteKeySplit = paletteKey.replace("]", "").split("\\[");
+                    final var block = Block.fromNamespaceId(paletteKeySplit[0]);
+                    final HashMap<String, String> properties = new HashMap<>();
+
+                    if (paletteKeySplit.length >= 2)
+                        for (var key : paletteKeySplit[1].split(",")) {
+                            var split = key.split("=");
+                            properties.put(split[0], split[1]);
+                        }
 
                     if (paletteKey.equals("minecraft:air")) continue;
                     if (paletteKey.equals("minecraft:structure_void")) continue;
+                    if (block == null) continue;
 
-                    if (material == null) continue;
-                    if (material.block() == null) continue;
-
+                    final Block finalBlock = block.withProperties(properties);
                     final Entity entity = new Entity(EntityType.BLOCK_DISPLAY);
                     final double finalX = w;
                     final double finalY = h;
                     final double finalZ = l;
 
                     entity.editEntityMeta(BlockDisplayMeta.class, meta -> {
-                        meta.setBlockState(material.block());
+                        meta.setBlockState(finalBlock);
                         meta.setTranslation(new Pos(finalX, finalY, finalZ));
+                        meta.setHasNoGravity(true);
                     });
 
                     entity.setInstance(instance, location);
