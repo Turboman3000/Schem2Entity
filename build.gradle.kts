@@ -1,9 +1,10 @@
 plugins {
     id("java")
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("maven-publish")
 }
 
-group = "de.turboman"
+group = "de.turboman.libs"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -24,4 +25,16 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "de.turboman.libs"
+            artifactId = "s2e"
+            version = "1.0"
+
+            from(components["java"])
+        }
+    }
 }
