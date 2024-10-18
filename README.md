@@ -6,11 +6,7 @@ Schem2Entity is a library for the [Minestom](https://github.com/Minestom/Minesto
 
 You can add this library to your project either by manually including it as a dependency or by adding it to your build tool (e.g., `gradle`, `maven`).
 
-## Usage
-
-The library provides a simple method to load `.schem` files into a Minecraft instance and spawn the blocks as Block Display Entities at a specific location.
-
-### Example
+##   Example
 
 ```java
 import net.minestom.server.instance.InstanceContainer;
