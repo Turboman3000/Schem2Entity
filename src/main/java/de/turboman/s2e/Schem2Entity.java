@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Schem2Entity {
     private static final Nbt NBT = new Nbt();
@@ -59,7 +60,7 @@ public class Schem2Entity {
                         }
 
                     if (paletteKey.contains("minecraft:light")
-                            && !paletteKey.replace("minecraft:light","").startsWith("_")) continue;
+                            && !paletteKey.replace("minecraft:light", "").startsWith("_")) continue;
                     else if (paletteKey.contains("minecraft:air")) continue;
                     else if (paletteKey.contains("minecraft:barrier")) continue;
                     else if (paletteKey.contains("minecraft:structure_void")) continue;
@@ -68,14 +69,46 @@ public class Schem2Entity {
 
                     final Block finalBlock = block.withProperties(properties);
                     final Entity entity = new Entity(EntityType.BLOCK_DISPLAY);
-                    final double finalX = w;
-                    final double finalY = h;
-                    final double finalZ = l;
+
+                    AtomicReference<Double> finalX = new AtomicReference<>((double) w);
+                    AtomicReference<Double> finalY = new AtomicReference<>((double) h);
+                    AtomicReference<Double> finalZ = new AtomicReference<>((double) l);
 
                     entity.editEntityMeta(BlockDisplayMeta.class, meta -> {
                         meta.setBlockState(finalBlock);
-                        meta.setTranslation(new Pos(finalX, finalY, finalZ));
                         meta.setHasNoGravity(true);
+
+                        // Fix Chest Rotation
+                        if (paletteKey.contains("minecraft:chest")) {
+                            meta.setRightRotation(new float[]{0, 0, 0, 1});
+
+                            if (properties.get("facing").equals("south")) {
+                                meta.setLeftRotation(new float[]{
+                                        0, 0, 0, 1
+                                });
+                            } else if (properties.get("facing").equals("west")) {
+                                meta.setLeftRotation(new float[]{
+                                        0, -0.7071068f, 0, 0.7071068f
+                                });
+
+                                finalX.updateAndGet(v -> v + 1);
+                            } else if (properties.get("facing").equals("north")) {
+                                meta.setLeftRotation(new float[]{
+                                        0, 1, 0, 0
+                                });
+
+                                finalX.updateAndGet(v -> v + 1);
+                                finalZ.updateAndGet(v -> v + 1);
+                            } else if (properties.get("facing").equals("east")) {
+                                meta.setLeftRotation(new float[]{
+                                        0, 0.7071068f, 0, 0.7071068f
+                                });
+
+                                finalZ.updateAndGet(v -> v + 1);
+                            }
+                        }
+
+                        meta.setTranslation(new Pos(finalX.get(), finalY.get(), finalZ.get()));
                     });
 
                     entity.setInstance(instance, location);
