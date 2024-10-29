@@ -1,8 +1,6 @@
 package de.turboman.s2e;
 
 import net.minestom.server.MinecraftServer;
-import net.minestom.server.command.CommandManager;
-import net.minestom.server.command.builder.Command;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.event.GlobalEventHandler;
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent;
