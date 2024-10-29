@@ -58,10 +58,11 @@ public class Schem2Entity {
                             properties.put(split[0], split[1]);
                         }
 
-                    if (paletteKey.equals("minecraft:light")) continue;
-                    else if (paletteKey.equals("minecraft:air")) continue;
-                    else if (paletteKey.equals("minecraft:barrier")) continue;
-                    else if (paletteKey.equals("minecraft:structure_void")) continue;
+                    if (paletteKey.contains("minecraft:light")
+                            && !paletteKey.replace("minecraft:light","").startsWith("_")) continue;
+                    else if (paletteKey.contains("minecraft:air")) continue;
+                    else if (paletteKey.contains("minecraft:barrier")) continue;
+                    else if (paletteKey.contains("minecraft:structure_void")) continue;
                     else if (paletteKey.contains("bed") && paletteKey.contains("part=foot")) continue;
                     else if (block == null) continue;
 
